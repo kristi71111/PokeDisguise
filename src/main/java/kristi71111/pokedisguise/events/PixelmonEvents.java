@@ -34,7 +34,7 @@ public class PixelmonEvents {
             }
         }
         if (battleParticipant2 instanceof EntityPlayerMP) {
-            DisguisedPlayer disguisedPlayer = PokeDisguise.disguisedPlayers.get(battleParticipant1);
+            DisguisedPlayer disguisedPlayer = PokeDisguise.disguisedPlayers.get(battleParticipant2);
             if (disguisedPlayer != null) {
                 event.setCanceled(true);
             }
