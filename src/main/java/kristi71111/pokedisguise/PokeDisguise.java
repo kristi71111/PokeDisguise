@@ -1,6 +1,5 @@
 package kristi71111.pokedisguise;
 
-import com.pixelmonmod.pixelmon.Pixelmon;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import kristi71111.pokedisguise.commands.PokeDisguiseCommand;
@@ -53,7 +52,7 @@ public class PokeDisguise {
         event.registerServerCommand(new PokeDisguiseCommand());
         //Pixelmon Events
         if(ConfigRegistry.shouldCancelEvents){
-            Pixelmon.EVENT_BUS.register(new PixelmonEvents());
+            MinecraftForge.EVENT_BUS.register(new PixelmonEvents());
         }
     }
 }

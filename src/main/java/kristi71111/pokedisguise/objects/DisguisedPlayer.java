@@ -1,6 +1,6 @@
 package kristi71111.pokedisguise.objects;
 
-import com.pixelmonmod.pixelmon.entities.pixelmon.EntityPixelmon;
+import com.pixelmongenerations.common.entity.pixelmon.EntityPixelmon;
 import kristi71111.pokedisguise.ConfigRegistry;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayerMP;

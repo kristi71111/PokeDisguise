@@ -1,6 +1,6 @@
 package kristi71111.pokedisguise.events;
 
-import com.pixelmonmod.pixelmon.entities.pixelmon.EntityPixelmon;
+import com.pixelmongenerations.common.entity.pixelmon.EntityPixelmon;
 import kristi71111.pokedisguise.Helpers;
 import kristi71111.pokedisguise.PokeDisguise;
 import kristi71111.pokedisguise.objects.DisguisedPlayer;

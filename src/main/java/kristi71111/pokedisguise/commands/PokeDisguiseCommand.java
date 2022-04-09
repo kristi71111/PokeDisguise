@@ -1,10 +1,9 @@
 package kristi71111.pokedisguise.commands;
 
-import com.pixelmonmod.pixelmon.api.command.PixelmonCommand;
-import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
-import com.pixelmonmod.pixelmon.api.pokemon.PokemonSpec;
-import com.pixelmonmod.pixelmon.entities.pixelmon.EntityPixelmon;
-import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
+import com.pixelmongenerations.api.command.PixelmonCommand;
+import com.pixelmongenerations.api.pokemon.PokemonSpec;
+import com.pixelmongenerations.common.entity.pixelmon.EntityPixelmon;
+import com.pixelmongenerations.core.enums.EnumSpecies;
 import kristi71111.pokedisguise.ConfigRegistry;
 import kristi71111.pokedisguise.Helpers;
 import kristi71111.pokedisguise.objects.DisguisedPlayer;
@@ -80,7 +79,7 @@ public class PokeDisguiseCommand extends CommandBase {
                 return;
             }
             //Creating the Pokemon
-            final Pokemon pokemon = pokemonSpec.create();
+            final EntityPixelmon pokemon = pokemonSpec.create(worldServer);
             //Handling per perm if it's enabled
             if (ConfigRegistry.lockAllPokemonBehindPerm) {
                 if (!Helpers.hasPerm(playerMP, "pokedisguise.disguise." + pokemonSpec.name)) {
@@ -120,9 +119,7 @@ public class PokeDisguiseCommand extends CommandBase {
                 }
             }
             //Setting the stuff on the pixelmon entity
-            final EntityPixelmon pixelmon = new EntityPixelmon(worldServer);
-            pixelmon.setPokemon(pokemon);
-            pixelmon.setPositionAndRotation(playerMP.getPosition().getX(), playerMP.getPosition().getY(), playerMP.getPosition().getZ(), playerMP.rotationYaw, playerMP.rotationPitch);
+            pokemon.setPositionAndRotation(playerMP.getPosition().getX(), playerMP.getPosition().getY(), playerMP.getPosition().getZ(), playerMP.rotationYaw, playerMP.rotationPitch);
 
             //First we check if he's already disguised so that we can handle switching disguises
             DisguisedPlayer disguisedPlayer = disguisedPlayers.get(playerMP);
@@ -131,16 +128,16 @@ public class PokeDisguiseCommand extends CommandBase {
                 final EntityTracker entityTracker = worldServer.getEntityTracker();
                 Set<EntityPlayerMP> playerSet = (Set<EntityPlayerMP>) entityTracker.getTrackingPlayers(playerMP);
                 //create the object
-                disguisedPlayer = new DisguisedPlayer(playerMP, pixelmon);
+                disguisedPlayer = new DisguisedPlayer(playerMP, pokemon);
                 //Set player as invisible
                 playerMP.setInvisible(true);
                 //Send packet fake entity spawn packet to everyone
                 for (EntityPlayerMP trackedPlayer : playerSet) {
-                    Helpers.SendFakePokemon(trackedPlayer, pixelmon);
+                    Helpers.SendFakePokemon(trackedPlayer, pokemon);
                 }
                 //Self disguise check
                 if (ConfigRegistry.shouldPlayerSeeOwnDisguise) {
-                    Helpers.SendFakePokemon(playerMP, pixelmon);
+                    Helpers.SendFakePokemon(playerMP, pokemon);
                     //Hacky way to get rid of collisions by making the player think they are on a team
                     if(ConfigRegistry.shouldPlayerHaveDisabledCollisions){
                         playerMP.connection.sendPacket(new SPacketTeams(disguisedPlayer.getHackedCollision(), 0));
@@ -152,14 +149,14 @@ public class PokeDisguiseCommand extends CommandBase {
                 //We get the old entity id
                 int entityIDOLD = disguisedPlayer.getDisguisedEntity().getEntityId();
                 //We set the new entity
-                disguisedPlayer.setDisguisedEntity(pixelmon);
+                disguisedPlayer.setDisguisedEntity(pokemon);
                 //We get everyone who's tracked
                 final EntityTracker entityTracker = worldServer.getEntityTracker();
                 Set<EntityPlayerMP> playerSet = (Set<EntityPlayerMP>) entityTracker.getTrackingPlayers(playerMP);
                 for (EntityPlayerMP trackedPlayer : playerSet) {
                     //We destroy the old entity and spawn the new one in
                     trackedPlayer.connection.sendPacket(new SPacketDestroyEntities(entityIDOLD));
-                    Helpers.SendFakePokemon(trackedPlayer, pixelmon);
+                    Helpers.SendFakePokemon(trackedPlayer, pokemon);
                 }
                 //Set player as invisible again just in case
                 playerMP.setInvisible(true);
@@ -168,7 +165,7 @@ public class PokeDisguiseCommand extends CommandBase {
                     //Removing the old entity
                     playerMP.connection.sendPacket(new SPacketDestroyEntities(entityIDOLD));
                     //Spawning the new entity
-                    Helpers.SendFakePokemon(playerMP, pixelmon);
+                    Helpers.SendFakePokemon(playerMP, pokemon);
                 }
             }
             //Messages
@@ -184,7 +181,7 @@ public class PokeDisguiseCommand extends CommandBase {
 
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
         if (args.length == 1) {
-            return PixelmonCommand.tabCompletePokemon(args);
+            return getListOfStringsMatchingLastWord(args, EnumSpecies.getNameList());
         } else if (args.length == 2 && ConfigRegistry.allowShinyArgument) {
             if (sender instanceof EntityPlayerMP) {
                 if (ConfigRegistry.lockShinyArgBehindPerm) {
