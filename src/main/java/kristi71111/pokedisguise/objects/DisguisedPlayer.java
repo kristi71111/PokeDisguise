@@ -12,6 +12,9 @@ public class DisguisedPlayer {
     private long lastEncodedPosX;
     private long lastEncodedPosY;
     private long lastEncodedPosZ;
+    private double lastPositionX;
+    private double LastPositionY;
+    private double LastPositionZ;
     private ScorePlayerTeam hackedCollision;
 
     public DisguisedPlayer(EntityPlayerMP trackedPlayer, EntityPixelmon disguisedEntity) {
@@ -19,12 +22,41 @@ public class DisguisedPlayer {
         this.lastEncodedPosX = EntityTracker.getPositionLong(trackedPlayer.posX);
         this.lastEncodedPosY = EntityTracker.getPositionLong(trackedPlayer.posY);
         this.lastEncodedPosZ = EntityTracker.getPositionLong(trackedPlayer.posZ);
-        if (ConfigRegistry.shouldPlayerSeeOwnDisguise && ConfigRegistry.shouldPlayerHaveDisabledCollisions) {
-            hackedCollision = new ScorePlayerTeam(trackedPlayer.getWorldScoreboard(), "PokeDisguiseHack");
-            hackedCollision.getMembershipCollection().add(trackedPlayer.getName());
-            hackedCollision.setCollisionRule(Team.CollisionRule.NEVER);
-            hackedCollision.setSeeFriendlyInvisiblesEnabled(false);
+        if (ConfigRegistry.shouldPlayerSeeOwnDisguise) {
+            if (ConfigRegistry.shouldPlayerHaveDisabledCollisions) {
+                hackedCollision = new ScorePlayerTeam(trackedPlayer.getWorldScoreboard(), "PokeDisguiseHack");
+                hackedCollision.getMembershipCollection().add(trackedPlayer.getName());
+                hackedCollision.setCollisionRule(Team.CollisionRule.NEVER);
+                hackedCollision.setSeeFriendlyInvisiblesEnabled(false);
+            }
+            lastPositionX = trackedPlayer.posX;
+            LastPositionY = trackedPlayer.posY;
+            LastPositionZ = trackedPlayer.posZ;
         }
+    }
+
+    public double getLastPositionY() {
+        return LastPositionY;
+    }
+
+    public void setLastPositionY(double lastPositionY) {
+        LastPositionY = lastPositionY;
+    }
+
+    public double getLastPositionX() {
+        return lastPositionX;
+    }
+
+    public void setLastPositionX(double lastPositionX) {
+        this.lastPositionX = lastPositionX;
+    }
+
+    public double getLastPositionZ() {
+        return LastPositionZ;
+    }
+
+    public void setLastPositionZ(double lastPositionZ) {
+        LastPositionZ = lastPositionZ;
     }
 
     public ScorePlayerTeam getHackedCollision() {

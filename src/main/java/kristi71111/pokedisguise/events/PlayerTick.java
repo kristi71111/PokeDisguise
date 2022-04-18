@@ -7,7 +7,7 @@ import kristi71111.pokedisguise.objects.DisguisedPlayer;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.SPacketEntity;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -32,11 +32,11 @@ public class PlayerTick {
         if (playerSet.isEmpty() && !ConfigRegistry.shouldPlayerSeeOwnDisguise) {
             return;
         }
-        Packet movementAndLook = Helpers.getEntityLookMovePacket(disguisedPlayer, playerMP);
-        //Sending to self if defined
-        if (ConfigRegistry.shouldPlayerSeeOwnDisguise) {
-            playerMP.connection.sendPacket(movementAndLook);
+        //This is a bit ugly but fixes one of the bugs in a way so I only do it once a second
+        if (event.player.world.getTotalWorldTime() % 20 != 0) {
+            playerMP.setInvisible(true);
         }
+        SPacketEntity.S17PacketEntityLookMove movementAndLook = Helpers.getEntityLookMovePacket(disguisedPlayer, playerMP);
         for (EntityPlayer player : playerSet) {
             EntityPlayerMP playerMP1 = (EntityPlayerMP) player;
             playerMP1.connection.sendPacket(movementAndLook);

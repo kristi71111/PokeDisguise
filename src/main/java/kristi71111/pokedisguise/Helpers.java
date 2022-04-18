@@ -59,9 +59,33 @@ public class Helpers {
         disguisedPlayer.setLastEncodedPosX(newEncodedPosX);
         disguisedPlayer.setLastEncodedPosY(newEncodedPosY);
         disguisedPlayer.setLastEncodedPosZ(newEncodedPosZ);
-        //Packet sending
+        //MoveLookPacket
         EntityPixelmon pixelmon = disguisedPlayer.getDisguisedEntity();
-        return new SPacketEntity.S17PacketEntityLookMove(pixelmon.getEntityId(), x, y, z, (byte) yaw, (byte) pitch, !playerMP.capabilities.isFlying);
+        SPacketEntity.S17PacketEntityLookMove EntityMoveLook = new SPacketEntity.S17PacketEntityLookMove(pixelmon.getEntityId(), x, y, z, (byte) yaw, (byte) pitch, !playerMP.capabilities.isFlying);
+        //Teleport handling in case player teleports over long distance
+        if (ConfigRegistry.shouldPlayerSeeOwnDisguise) {
+            //Don't ask yes this is ugly but it fixes a bug
+            double lastPosX = disguisedPlayer.getLastPositionX();
+            double lastPosY = disguisedPlayer.getLastPositionY();
+            double lastPosZ = disguisedPlayer.getLastPositionZ();
+            disguisedPlayer.setLastPositionX(playerMP.posX);
+            disguisedPlayer.setLastPositionY(playerMP.posY);
+            disguisedPlayer.setLastPositionZ(playerMP.posZ);
+            if ((getDifferenceBetweenNumbers(lastPosX, playerMP.posX) > 6) || (getDifferenceBetweenNumbers(lastPosZ, playerMP.posZ) > 6) || (getDifferenceBetweenNumbers(lastPosY, playerMP.posY) > 6)){
+                //We moved more than 6 blocks so we should "teleport".
+                pixelmon.setPositionAndRotation(playerMP.posX, playerMP.posY, playerMP.posZ, playerMP.getRotationYawHead(), playerMP.rotationPitch);
+                playerMP.connection.sendPacket(new SPacketEntityTeleport(pixelmon));
+            }else {
+                //We moved less than 6 blocks so we can move.
+                playerMP.connection.sendPacket(EntityMoveLook);
+            }
+        }
+        //Packet sending
+        return EntityMoveLook;
+    }
+
+    private static double getDifferenceBetweenNumbers(double a, double b){
+        return Math.abs(a - b);
     }
 
     public static void removeDisguise(EntityPlayerMP playerMP, boolean isDcing) {
@@ -95,4 +119,3 @@ public class Helpers {
     }
 
 }
-

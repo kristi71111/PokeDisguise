@@ -119,7 +119,7 @@ public class PokeDisguiseCommand extends CommandBase {
                 }
             }
             //Setting the stuff on the pixelmon entity
-            pokemon.setPositionAndRotation(playerMP.getPosition().getX(), playerMP.getPosition().getY(), playerMP.getPosition().getZ(), playerMP.rotationYaw, playerMP.rotationPitch);
+            pokemon.setPositionAndRotation(playerMP.posX, playerMP.posY, playerMP.posZ, playerMP.rotationYaw, playerMP.rotationPitch);
 
             //First we check if he's already disguised so that we can handle switching disguises
             DisguisedPlayer disguisedPlayer = disguisedPlayers.get(playerMP);
