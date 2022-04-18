@@ -7,8 +7,7 @@ import kristi71111.pokedisguise.objects.DisguisedPlayer;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.INetHandlerPlayClient;
+import net.minecraft.network.play.server.SPacketEntity;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -37,7 +36,7 @@ public class PlayerTick {
         if (event.player.world.getTotalWorldTime() % 20 != 0) {
             playerMP.setInvisible(true);
         }
-        Packet<INetHandlerPlayClient> movementAndLook = Helpers.getEntityLookMovePacket(disguisedPlayer, playerMP);
+        SPacketEntity.S17PacketEntityLookMove movementAndLook = Helpers.getEntityLookMovePacket(disguisedPlayer, playerMP);
         for (EntityPlayer player : playerSet) {
             EntityPlayerMP playerMP1 = (EntityPlayerMP) player;
             playerMP1.connection.sendPacket(movementAndLook);
