@@ -17,7 +17,6 @@ This mod however is **server side only!**
     * lockAllPokemonBehindPerm permission node (Make sure name starts with upper case): **minecraft.command.pokedisguise.disguise.Pokemonname**
 
 # Known issues   
-- Teleporting while disguised will make your disguise no longer render for yourself if shouldPlayerSeeOwnDisguise is set to true. Reenabling disguise fixes this.
-- Vanishing while disguised will completely break stuff (Sponge not sure how Mohist handles this).
+- Moving across dimensions will break viewing your own disguise.
 # Support
   - [**Click here to join my support discord.**](https://discord.gg/x53dk93Xsk)

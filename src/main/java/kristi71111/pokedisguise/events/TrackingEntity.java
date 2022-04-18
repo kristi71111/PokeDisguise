@@ -22,7 +22,7 @@ public class TrackingEntity {
                 EntityPlayerMP targetPlayer = (EntityPlayerMP) target;
                 //Disguise
                 EntityPixelmon disguise = disguisedPlayer.getDisguisedEntity();
-                disguise.setPositionAndRotation(playerMP.getPosition().getX(), playerMP.getPosition().getY(), playerMP.getPosition().getZ(), playerMP.rotationYaw, playerMP.rotationPitch);
+                disguise.setPositionAndRotation(playerMP.posX, playerMP.posY, playerMP.posZ, playerMP.rotationYaw, playerMP.rotationPitch);
                 //Packet stuff
                 Helpers.SendFakePokemon(targetPlayer, disguise);
             }

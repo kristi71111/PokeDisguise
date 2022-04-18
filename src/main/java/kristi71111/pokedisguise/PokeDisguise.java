@@ -29,9 +29,10 @@ import java.io.File;
 public class PokeDisguise {
     public static final String MOD_ID = "pokedisguise";
     public static final String MOD_NAME = "PokeDisguise";
-    public static final String VERSION = "1.0.1";
+    public static final String VERSION = "1.0.2";
     public static Logger logger;
     public static Reference2ObjectMap<EntityPlayerMP, DisguisedPlayer> disguisedPlayers = new Reference2ObjectOpenHashMap<>();
+
     @Mod.Instance(MOD_ID)
     public static PokeDisguise INSTANCE;
 
